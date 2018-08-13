@@ -1,0 +1,79 @@
+Basic Docker Commands
+
+Below are a few basic commands to get us started with docker.
+
+docker run  - will run a docker container off a docker image if it exists, if doesnt exit it will pull down a docker image
+off dockerhub and run it.
+
+docker ps - will list all running containers on a docker host.  You can use the -a option to view all running conrainers
+as well as all containers which have been previously exited.
+
+docker stop - is used to stop a container on the docker host - you can wither pass the container ID or name to the command.
+
+docker rm   - is used to remove a stopped or exited container from the docker host.  You can pass ID or name as arguments.
+
+docker images - will list all images that have been downloaded and you can start a container from them.
+
+docker rmi - is used to remove a docker images - no containers must be running off the image.
+
+docker pull - used to only pull the image instead of downloading and running as with docker run.
+
+docker run command - you can run a container off an image and append commands to run to that image.  For example you can run
+docker image ubuntu ls to list files and folders in ubuntu container.
+
+docker exec - allows you to run commands within a running container - for example docker exec gifted_gabe cat /etc/hosts
+
+
+
+Demo Docker commands
+
+As we have seen if you run a docker container but you dont ask it to do anything it will just exit.  Say for example I want to
+run a docker container for Ubuntu and be placed in the bash shell I can do:
+
+docker run -it ubuntu bash
+
+ddamico@Danieles-MBP:~/Udemy/Docker$ docker run -it ubuntu bash
+root@6a06fb10a7d4:/# cat /etc/os-release
+NAME="Ubuntu"
+VERSION="18.04.1 LTS (Bionic Beaver)"
+
+If you want to run commands in the background on a container you can run:
+
+ddamico@Danieles-MBP:~/Udemy/Docker$ docker run -d ubuntu sleep 100
+ae13a3760211613b2fb51d870f22aafa6f5055f72e23a26937ddc469ba3405a2
+
+ddamico@Danieles-MBP:~/Udemy/Docker$ docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED                  STATUS              PORTS               NAMES
+ae13a3760211        ubuntu              "sleep 100"         Less than a second ago   Up 4 seconds                            vigorous_nightingale
+
+What you can also do is run commands against a running container using docker exec.  For example below we are doing:
+
+Running a container which we dont have an image for so we are pulling it from dockerhub.
+We also run a sleep command against it in the background so we get our prompt back.
+Then we check for running containers and get the ID back.
+Finally run a command against the running container viewing the contents of /etc/Python_Test_Scripts
+
+ddamico@Danieles-MBP:~/Udemy/Docker$ docker run -d ubuntu sleep 1000
+Unable to find image 'ubuntu:latest' locally
+latest: Pulling from library/ubuntu
+c64513b74145: Pull complete
+01b8b12bad90: Pull complete
+c5d85cf7a05f: Pull complete
+b6b268720157: Pull complete
+e12192999ff1: Pull complete
+Digest: sha256:3f119dc0737f57f704ebecac8a6d8477b0f6ca1ca0332c7ee1395ed2c6a82be7
+Status: Downloaded newer image for ubuntu:latest
+73311c5815fb4d58e383c1fe5e960eb6e050a8451d0644c07a3d849ee39987c9
+
+ddamico@Danieles-MBP:~/Udemy/Docker$ docker ps -a
+CONTAINER ID        IMAGE               COMMAND             CREATED                  STATUS              PORTS               NAMES
+73311c5815fb        ubuntu              "sleep 1000"        Less than a second ago   Up 7 seconds                            quizzical_ritchie
+
+ddamico@Danieles-MBP:~/Udemy/Docker$ docker exec 73311c5815fb cat /etc/hosts
+127.0.0.1       localhost
+::1     localhost ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+172.17.0.2      73311c5815fb
